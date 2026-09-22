@@ -21,8 +21,10 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
   const loadRegistry = async () => {
     setIsRefreshing(true);
     try {
-      // First try local relative path (served with site)
-      const res = await fetch('./registry.json');
+      // First try configured base URL
+      const baseUrl = import.meta.env.BASE_URL || './';
+      const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+      const res = await fetch(`${cleanBase}registry.json`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.plugins)) {
