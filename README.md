@@ -1,12 +1,14 @@
 # avm-marketplace
 
-The plugin registry `avm plugin add <name>` resolves against. `avm-cli`
-fetches [`registry.json`](registry.json) from this repo's `main` branch (no
-server, no API — just a file over `raw.githubusercontent.com`) to turn a
-short name into a GitHub repo, then fetches that repo's **latest GitHub
-Release** (a prebuilt binary, never source) for the current platform.
+The official plugin registry and documentation portal for [avm (Any Version Manager)](https://github.com/PrajaNova/avm).
 
-## Adding a plugin
+`avm-cli` fetches [`registry.json`](registry.json) directly from this repo's `main` branch (no server, no API — just a file over `raw.githubusercontent.com`) to turn a short plugin name into a GitHub repo, then fetches that repo's **latest GitHub Release** (a prebuilt native binary, never source) for the current platform.
+
+This repository also hosts the modern **avm Documentation & Marketplace Web Portal**, deployable to GitHub Pages at `https://prajanova.github.io/avm-marketplace/`.
+
+---
+
+## Adding a plugin to the marketplace
 
 Open a PR adding an entry to `registry.json`:
 
@@ -37,3 +39,41 @@ Requirements for `repo`:
 
 `avm plugin add <name>` works the moment your repo has one matching release
 published — no changes needed on the avm side beyond the registry entry.
+
+---
+
+## Documentation & Marketplace Web Portal
+
+The web portal is a modern, responsive React + TypeScript + Vite + Tailwind CSS application inspired by `brew.sh`. It features:
+
+- **Interactive Install Hero** (curl, brew, npm, cargo tabs with 1-click copy)
+- **Live Plugin Explorer** querying `registry.json` dynamically
+- **Interactive Terminal Preview** demonstrating workflows
+- **Comprehensive Guide** for `.avm.json`, shell shims, and runtime resolution
+- **Full CLI Command Reference** with real examples
+- **Plugin Authoring Guide** with code samples and workflow definitions
+
+### Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start local development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+### GitHub Pages Deployment
+
+The site is configured to automatically build and deploy to GitHub Pages whenever changes are merged into the `main` branch via the GitHub Actions workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+To enable GitHub Pages in your repository settings:
+1. Navigate to **Settings > Pages** in your GitHub repository.
+2. Under **Build and deployment > Source**, select **GitHub Actions**.
+3. Push to `main` — the workflow will build and publish automatically.
