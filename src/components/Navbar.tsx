@@ -1,39 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import { Terminal, Package, BookOpen, Layers, GitPullRequest, Github, Menu, X, ExternalLink } from 'lucide-react';
 
-interface NavbarProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
+export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: Terminal },
-    { id: 'marketplace', label: 'Marketplace', icon: Package },
-    { id: 'docs', label: 'Documentation', icon: BookOpen },
-    { id: 'commands', label: 'Commands', icon: Layers },
-    { id: 'author', label: 'Create Plugin', icon: GitPullRequest },
+    { to: '/', label: 'Intro & Overview', icon: Terminal, end: true },
+    { to: '/marketplace', label: 'Marketplace', icon: Package, end: false },
+    { to: '/docs', label: 'Documentation', icon: BookOpen, end: false },
+    { to: '/commands', label: 'Commands', icon: Layers, end: false },
+    { to: '/create-plugin', label: 'Create Plugin', icon: GitPullRequest, end: false },
   ];
 
-  const handleNavClick = (id: string) => {
-    setActiveTab(id);
-    setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80 transition-all">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/85 border-b border-slate-800/80 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Logo */}
-        <div 
-          onClick={() => handleNavClick('overview')} 
-          className="flex items-center gap-3 cursor-pointer group"
+        <Link 
+          to="/" 
+          className="flex items-center gap-3 group"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center font-mono font-bold text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
             ⚡
@@ -51,31 +38,33 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               Any Version Manager
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800">
+        <nav className="hidden md:flex items-center gap-1 bg-slate-900/70 p-1.5 rounded-full border border-slate-800">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
             return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  isActive
-                    ? 'bg-emerald-500/15 text-emerald-400 shadow-sm border border-emerald-500/30'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
-                }`}
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                    isActive
+                      ? 'bg-emerald-500/20 text-emerald-300 shadow-sm border border-emerald-500/40 font-semibold'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                  }`
+                }
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 {item.label}
-              </button>
+              </NavLink>
             );
           })}
         </nav>
 
-        {/* External links & GitHub */}
+        {/* GitHub link */}
         <div className="hidden sm:flex items-center gap-3">
           <a
             href="https://github.com/PrajaNova/avm"
@@ -105,20 +94,23 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         <div className="md:hidden border-b border-slate-800 bg-slate-950 px-4 pt-2 pb-4 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
             return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm font-medium ${
-                  isActive
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-300 hover:bg-slate-900'
-                }`}
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm font-medium ${
+                    isActive
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : 'text-slate-300 hover:bg-slate-900'
+                  }`
+                }
               >
                 <Icon className="w-4 h-4" />
                 {item.label}
-              </button>
+              </NavLink>
             );
           })}
           <div className="pt-2 border-t border-slate-800">

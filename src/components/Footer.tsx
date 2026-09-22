@@ -1,21 +1,18 @@
+import { Link } from 'react-router-dom';
 import { Github, ExternalLink } from 'lucide-react';
 
-interface FooterProps {
-  onNavClick: (id: string) => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
+export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-slate-900 bg-slate-950 text-slate-400 text-xs font-sans">
+    <footer className="border-t border-slate-900 bg-slate-950 text-slate-400 text-xs font-sans mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-10">
           
           {/* Brand Col */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-white font-bold text-base">
+            <Link to="/" className="flex items-center gap-2 text-white font-bold text-base">
               <span className="text-emerald-400 font-mono text-xl">⚡</span>
               <span>avm</span>
-            </div>
+            </Link>
             <p className="text-slate-400 text-xs leading-relaxed">
               Any Version Manager &mdash; the Rust-native monorepo tooling layer for command aliases, runtime selection, and plugin discovery.
             </p>
@@ -27,33 +24,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
           {/* Quick Links */}
           <div className="space-y-2">
             <div className="font-mono text-slate-200 font-semibold uppercase tracking-wider text-[11px]">
-              Navigation
+              Pages
             </div>
             <ul className="space-y-1.5 font-mono text-xs">
               <li>
-                <button onClick={() => onNavClick('overview')} className="hover:text-emerald-400 transition-colors">
-                  Overview & Hero
-                </button>
+                <Link to="/" className="hover:text-emerald-400 transition-colors">
+                  Intro & Overview
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavClick('marketplace')} className="hover:text-emerald-400 transition-colors">
+                <Link to="/marketplace" className="hover:text-emerald-400 transition-colors">
                   Plugin Marketplace
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavClick('docs')} className="hover:text-emerald-400 transition-colors">
-                  Documentation & Setup
-                </button>
+                <Link to="/docs" className="hover:text-emerald-400 transition-colors">
+                  Documentation & Architecture
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavClick('commands')} className="hover:text-emerald-400 transition-colors">
-                  Command Reference
-                </button>
+                <Link to="/commands" className="hover:text-emerald-400 transition-colors">
+                  Command Cheat Sheet
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavClick('author')} className="hover:text-emerald-400 transition-colors">
-                  Build a Plugin
-                </button>
+                <Link to="/create-plugin" className="hover:text-emerald-400 transition-colors">
+                  Create a Plugin
+                </Link>
               </li>
             </ul>
           </div>

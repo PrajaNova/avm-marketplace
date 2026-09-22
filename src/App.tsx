@@ -1,17 +1,17 @@
 import { useState } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { TerminalPreview } from './components/TerminalPreview';
-import { Features } from './components/Features';
-import { Marketplace } from './components/Marketplace';
-import { DocsSection } from './components/DocsSection';
-import { CliReference } from './components/CliReference';
-import { PluginAuthorGuide } from './components/PluginAuthorGuide';
 import { Footer } from './components/Footer';
 import { Toast } from './components/Toast';
+import { ScrollToTop } from './components/ScrollToTop';
+
+import { HomePage } from './pages/HomePage';
+import { MarketplacePage } from './pages/MarketplacePage';
+import { DocsPage } from './pages/DocsPage';
+import { CommandsPage } from './pages/CommandsPage';
+import { CreatePluginPage } from './pages/CreatePluginPage';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('overview');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (message: string) => {
@@ -21,56 +21,31 @@ export function App() {
     }, 2500);
   };
 
-  const scrollTo = (id: string) => {
-    setActiveTab(id);
-    const elem = document.getElementById(id);
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
-      {/* Toast Notification */}
-      <Toast message={toastMessage} />
+    <HashRouter>
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
+        <ScrollToTop />
+        <Toast message={toastMessage} />
 
-      {/* Top Navbar */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Global sticky navigation */}
+        <Navbar />
 
-      {/* Main Content Sections */}
-      <main className="flex-1" id="overview">
-        {/* Hero with Homebrew-like Install Bar */}
-        <Hero
-          onCopy={(text) => showToast(`Copied to clipboard: ${text}`)}
-          onExploreMarketplace={() => scrollTo('marketplace')}
-          onViewDocs={() => scrollTo('docs')}
-        />
+        {/* Routed pages */}
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/marketplace" element={<MarketplacePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/docs" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/commands" element={<CommandsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/create-plugin" element={<CreatePluginPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
 
-        {/* Realistic Terminal Preview */}
-        <TerminalPreview />
-
-        {/* Feature Grid ("Why AVM?") */}
-        <Features />
-
-        {/* AVM Marketplace (Live from registry.json) */}
-        <Marketplace
-          onCopy={(text) => showToast(`Copied to clipboard: ${text}`)}
-          onOpenCreatePlugin={() => scrollTo('author')}
-        />
-
-        {/* In-depth Documentation & Setup Guide */}
-        <DocsSection onCopy={(text) => showToast(`Copied to clipboard: ${text}`)} />
-
-        {/* Searchable CLI Commands Reference */}
-        <CliReference onCopy={(text) => showToast(`Copied to clipboard: ${text}`)} />
-
-        {/* Plugin Developer & Scaffolding Guide */}
-        <PluginAuthorGuide onCopy={(text) => showToast(`Copied to clipboard: ${text}`)} />
-      </main>
-
-      {/* Footer */}
-      <Footer onNavClick={scrollTo} />
-    </div>
+        {/* Global footer */}
+        <Footer />
+      </div>
+    </HashRouter>
   );
 }
 
