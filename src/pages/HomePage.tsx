@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Copy,
-  Check,
   ArrowRight,
   FileJson,
   FolderGit2,
@@ -17,8 +15,7 @@ import {
   Smartphone,
   Terminal,
 } from 'lucide-react';
-import * as Tooltip from '@radix-ui/react-tooltip';
-import { COMPARISONS } from '../data/guideData';
+import { ComparisonTable } from '../components/ComparisonTable';
 import { WalkthroughVideo } from '../components/WalkthroughVideo';
 import { TerminalInstallBox } from '../components/TerminalInstallBox';
 
@@ -27,15 +24,6 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
-  const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
-
-  const handleCopyText = (id: string, text: string) => {
-    onCopy(text);
-    navigator.clipboard.writeText(text);
-    setCopiedSnippet(id);
-    setTimeout(() => setCopiedSnippet(null), 2000);
-  };
-
   const whyAvm = [
     {
       num: '01',
@@ -93,7 +81,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
   ];
 
   return (
-    <Tooltip.Provider delayDuration={150}>
+    <>
       <div className="w-full flex flex-col items-center">
 
         {/* ===================== HERO ===================== */}
@@ -112,7 +100,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
             plugins fetched on demand, lightning fast, nothing to compile.
           </p>
 
-          {/* Terminal Install Box with Radix UI Tabs & Fixed Tooltip Copy Button */}
+          {/* Terminal Install Box */}
           <TerminalInstallBox onCopy={onCopy} />
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
@@ -188,36 +176,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
             </h2>
           </div>
 
-          <div className="w-full rounded-xl border border-slate-700/80 bg-slate-900/50 shadow-xl overflow-x-auto">
-            <table className="w-full text-left text-[13px] border-collapse">
-              <thead>
-                <tr className="bg-slate-800/80 border-b border-slate-700">
-                  <th className="p-4 font-mono font-medium text-slate-400 whitespace-nowrap">Capability</th>
-                  <th className="p-4 font-mono font-bold text-emerald-400 border-l border-slate-700/80 bg-emerald-950/20">
-                    avm
-                  </th>
-                  <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">asdf</th>
-                  <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">vfox</th>
-                  <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">nvm</th>
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARISONS.map((comp, idx) => (
-                  <tr key={idx} className="border-t border-slate-800/80 hover:bg-slate-800/30 transition-colors">
-                    <td className="p-4 font-mono text-slate-200 whitespace-nowrap align-top font-medium">
-                      {comp.feature}
-                    </td>
-                    <td className="p-4 text-slate-100 border-l border-slate-700/80 align-top font-medium bg-emerald-950/10">
-                      {comp.avm}
-                    </td>
-                    <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.asdf}</td>
-                    <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.vfox}</td>
-                    <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.nvm}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ComparisonTable />
         </section>
 
         {/* ===================== USE CASES ===================== */}
@@ -293,36 +252,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
               </div>
             </div>
 
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <button
-                  onClick={() =>
-                    handleCopyText(
-                      'quickstart',
-                      'avm init\navm alias add dev "pnpm run dev"\navm plugin add node\navm node use 20.11.1\navm dev'
-                    )
-                  }
-                  className="absolute top-5 right-5 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 transition-colors shadow-sm"
-                  aria-label="Copy quickstart commands"
-                >
-                  {copiedSnippet === 'quickstart' ? (
-                    <Check className="w-4 h-4 text-emerald-400" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content
-                  side="left"
-                  sideOffset={5}
-                  className="z-50 px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-[11px] font-mono text-slate-200 shadow-xl"
-                >
-                  {copiedSnippet === 'quickstart' ? 'Copied to clipboard!' : 'Copy all commands'}
-                  <Tooltip.Arrow className="fill-slate-800" />
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
+            <button
+              onClick={() =>
+                onCopy(
+                  'avm init\navm alias add dev "pnpm run dev"\navm plugin add node\navm node use 20.11.1\navm dev'
+                )
+              }
+              className="absolute top-5 right-5 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 transition-colors shadow-sm"
+              title="Copy all commands"
+              aria-label="Copy quickstart commands"
+            >
+              <Copy className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-xl border border-slate-700/80 bg-slate-900/50 text-[13px]">
@@ -336,27 +277,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
             </div>
             <div className="shrink-0 flex items-center gap-3 bg-slate-800/90 border border-slate-700 px-3.5 py-2 rounded-lg font-mono text-emerald-400 text-xs shadow-sm">
               <span>eval "$(avm shell-init)"</span>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <button
-                    onClick={() => handleCopyText('shell', 'eval "$(avm shell-init)"')}
-                    className="hover:text-emerald-300 p-1 text-slate-400 hover:text-white transition-colors"
-                    aria-label="Copy shell init command"
-                  >
-                    {copiedSnippet === 'shell' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    side="top"
-                    sideOffset={5}
-                    className="z-50 px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-[11px] font-mono text-slate-200 shadow-xl"
-                  >
-                    {copiedSnippet === 'shell' ? 'Copied!' : 'Copy shell init'}
-                    <Tooltip.Arrow className="fill-slate-800" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
+              <button
+                onClick={() => onCopy('eval "$(avm shell-init)"')}
+                className="hover:text-emerald-300 p-1 text-slate-400 hover:text-white transition-colors"
+                title="Copy shell init"
+                aria-label="Copy shell init command"
+              >
+                <Copy className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         </section>
@@ -386,32 +314,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
   }
 }`}
               </pre>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <button
-                    onClick={() =>
-                      handleCopyText(
-                        'config',
-                        '{\n  "aliases": {\n    "dev": "pnpm run dev",\n    "release": "npm run release $1"\n  },\n  "env": {\n    "NODE_ENV": "development",\n    "API_URL": "https://api.local"\n  },\n  "tools": {\n    "node": "20.11.1"\n  }\n}'
-                      )
-                    }
-                    className="absolute top-5 right-5 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors shadow-sm"
-                    aria-label="Copy config JSON"
-                  >
-                    {copiedSnippet === 'config' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    side="left"
-                    sideOffset={5}
-                    className="z-50 px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-[11px] font-mono text-slate-200 shadow-xl"
-                  >
-                    {copiedSnippet === 'config' ? 'Copied config!' : 'Copy .avm.json template'}
-                    <Tooltip.Arrow className="fill-slate-800" />
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
+              <button
+                onClick={() =>
+                  onCopy('{\n  "aliases": {\n    "dev": "pnpm run dev",\n    "release": "npm run release $1"\n  },\n  "env": {\n    "NODE_ENV": "development",\n    "API_URL": "https://api.local"\n  },\n  "tools": {\n    "node": "20.11.1"\n  }\n}'
+                  )
+                }
+                className="absolute top-5 right-5 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors shadow-sm"
+                title="Copy .avm.json template"
+                aria-label="Copy config JSON"
+              >
+                <Copy className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="flex flex-col gap-3 justify-between">
@@ -527,6 +440,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
         </section>
 
       </div>
-    </Tooltip.Provider>
+    </>
   );
 };

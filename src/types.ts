@@ -1,25 +1,10 @@
-export interface RegistryPlugin {
-  name: string;
-  description: string;
-  section_label: string;
-  repo: string;
-}
-
-export interface RegistryFile {
-  schema_version: number;
-  plugins: RegistryPlugin[];
-}
-
-export interface PluginDetail extends RegistryPlugin {
-  iconName: string;
-  category: 'Runtime' | 'SDK' | 'Language' | 'Tool';
-  versionExample: string;
-  envVars?: string[];
+export interface PluginDetail {
+  envVars: string[];
   keyCommands: {
     command: string;
     description: string;
   }[];
-  sampleConfig?: string;
+  sampleConfig: string;
   highlights: string[];
 }
 

@@ -1,34 +1,7 @@
-import { RegistryFile, PluginDetail } from '../types';
+import { PluginDetail } from '../types';
 
-export const DEFAULT_REGISTRY: RegistryFile = {
-  schema_version: 1,
-  plugins: [
-    {
-      name: "node",
-      description: "Node.js — versions, install, package.json scripts",
-      section_label: "Node",
-      repo: "PrajaNova/avm-plugin-node"
-    },
-    {
-      name: "java",
-      description: "OpenJDK (Eclipse Temurin, via the foojay Disco API) — versions, install, JAVA_HOME",
-      section_label: "OpenJDK",
-      repo: "PrajaNova/avm-plugin-java"
-    },
-    {
-      name: "android",
-      description: "Android SDK (cmdline-tools, platform-tools, sdkmanager) — versions, install, ANDROID_HOME",
-      section_label: "Android SDK",
-      repo: "PrajaNova/avm-plugin-android"
-    }
-  ]
-};
-
-export const EXTENDED_PLUGIN_METADATA: Record<string, Partial<PluginDetail>> = {
+export const EXTENDED_PLUGIN_METADATA: Record<string, PluginDetail> = {
   node: {
-    iconName: 'Code2',
-    category: 'Runtime',
-    versionExample: '22.14.0',
     envVars: ['PATH (via shims)'],
     highlights: [
       'Live version index fetched straight from nodejs.org/dist/index.json',
@@ -55,9 +28,6 @@ export const EXTENDED_PLUGIN_METADATA: Record<string, Partial<PluginDetail>> = {
 }`
   },
   java: {
-    iconName: 'Coffee',
-    category: 'Language',
-    versionExample: '17.0.13+11',
     envVars: ['JAVA_HOME', 'PATH (via shims)'],
     highlights: [
       'Eclipse Temurin builds powered by foojay Disco API',
@@ -83,9 +53,6 @@ export const EXTENDED_PLUGIN_METADATA: Record<string, Partial<PluginDetail>> = {
 }`
   },
   android: {
-    iconName: 'Smartphone',
-    category: 'SDK',
-    versionExample: '34',
     envVars: ['ANDROID_HOME', 'ANDROID_SDK_ROOT', 'PATH (adb, sdkmanager, avdmanager, emulator)'],
     highlights: [
       'Direct index querying from Google repository2-3.xml',

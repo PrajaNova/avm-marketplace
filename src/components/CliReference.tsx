@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Layers, Search, Copy, Check } from 'lucide-react';
+import { Layers, Search, Copy } from 'lucide-react';
 import { CLI_COMMANDS } from '../data/cliReference';
 
 interface CliReferenceProps {
@@ -9,7 +9,6 @@ interface CliReferenceProps {
 export const CliReference: React.FC<CliReferenceProps> = ({ onCopy }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
 
   const categories = ['All', 'Core', 'Aliases', 'Plugins', 'Versions', 'Shims', 'Env'];
 
@@ -24,12 +23,6 @@ export const CliReference: React.FC<CliReferenceProps> = ({ onCopy }) => {
 
     return matchesSearch && matchesCategory;
   });
-
-  const handleCopy = (text: string) => {
-    onCopy(text);
-    setCopiedCmd(text);
-    setTimeout(() => setCopiedCmd(null), 2000);
-  };
 
   return (
     <section id="commands" className="py-20 border-t border-slate-900 scroll-mt-16">
@@ -113,15 +106,11 @@ export const CliReference: React.FC<CliReferenceProps> = ({ onCopy }) => {
                   <span className="text-slate-200">{item.example}</span>
                 </div>
                 <button
-                  onClick={() => handleCopy(item.example)}
+                  onClick={() => onCopy(item.example)}
                   className="shrink-0 ml-2 p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors"
                   title="Copy example"
                 >
-                  {copiedCmd === item.example ? (
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
-                  )}
+                  <Copy className="w-3.5 h-3.5" />
                 </button>
               </div>
 
