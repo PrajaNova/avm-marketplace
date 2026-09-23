@@ -8,31 +8,35 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          accent: '#10b981',
+        // Overrides Tailwind's built-in `slate`/`emerald` scales rather than
+        // adding new token names — the app uses slate-*/emerald-* directly
+        // everywhere, so this is what actually reskins every page (including
+        // ones not yet rewritten to the new style) to the single dark-teal
+        // palette, instead of only affecting components that opt in.
+        slate: {
+          50: '#f3f6f9',
+          100: '#e6edf3',
+          200: '#c9d6e0',
+          300: '#9fb0c0',
+          400: '#5b6b7a',
+          500: '#3d4652',
+          600: '#2b333e',
+          700: '#1e2732',
+          800: '#161b22',
+          900: '#0d1117',
+          950: '#080a0e',
         },
-        surface: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
-        }
+        emerald: {
+          300: '#96e9c8',
+          400: '#4fd1a5',
+          500: '#22a67e',
+          900: '#0f5540',
+          950: '#0c4433',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+        sans: ['"Space Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
       },
     },
   },
