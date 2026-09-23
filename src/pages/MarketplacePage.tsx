@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { Marketplace } from '../components/Marketplace';
 
 interface MarketplacePageProps {
@@ -6,14 +6,9 @@ interface MarketplacePageProps {
 }
 
 export const MarketplacePage: React.FC<MarketplacePageProps> = ({ onCopy }) => {
-  const navigate = useNavigate();
-
   return (
     <div className="py-6">
-      <Marketplace
-        onCopy={onCopy}
-        onOpenCreatePlugin={() => navigate('/create-plugin')}
-      />
+      <Marketplace onCopy={onCopy} />
     </div>
   );
 };

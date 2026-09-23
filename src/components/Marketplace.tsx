@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Package, PlusCircle, ExternalLink, Copy, Check, ArrowUpRight, Sparkles, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Package, ExternalLink, Copy, Check, ArrowUpRight, RefreshCw } from 'lucide-react';
 import { RegistryPlugin, PluginDetail } from '../types';
 import { DEFAULT_REGISTRY, EXTENDED_PLUGIN_METADATA } from '../data/registryData';
-import { PluginModal } from './PluginModal';
 
 interface MarketplaceProps {
   onCopy: (text: string) => void;
-  onOpenCreatePlugin: () => void;
 }
 
-export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePlugin }) => {
+export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy }) => {
+  const navigate = useNavigate();
   const [plugins, setPlugins] = useState<RegistryPlugin[]>(DEFAULT_REGISTRY.plugins);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedPlugin, setSelectedPlugin] = useState<PluginDetail | null>(null);
   const [copiedName, setCopiedName] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -133,13 +132,6 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-400' : ''}`} />
             </button>
-            <button
-              onClick={onOpenCreatePlugin}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-semibold transition-all shadow-sm"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Submit Plugin</span>
-            </button>
           </div>
         </div>
 
@@ -180,7 +172,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
           {filteredPlugins.map((plugin) => (
             <div
               key={plugin.name}
-              onClick={() => setSelectedPlugin(plugin)}
+              onClick={() => navigate(`/docs/plugins/${plugin.name}`)}
               className="group cursor-pointer rounded-2xl bg-slate-900/70 border border-slate-800/90 hover:border-emerald-500/50 hover:bg-slate-900 p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-emerald-500/5"
             >
               <div>
@@ -248,8 +240,9 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
                     <span>{plugin.repo.replace('PrajaNova/', '')}</span>
                     <ExternalLink className="w-3 h-3 text-slate-500" />
                   </a>
-                  <span className="flex items-center gap-1 text-emerald-400 group-hover:translate-x-0.5 transition-transform font-medium text-xs">
-                    Details <ArrowUpRight className="w-3.5 h-3.5" />
+                  <span className="flex items-center gap-1.5 text-emerald-400 group-hover:text-emerald-300 transition-colors font-mono font-medium text-xs">
+                    <span>Docs & Tutorial</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </span>
                 </div>
               </div>
@@ -263,7 +256,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
             <Package className="w-12 h-12 text-slate-600 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-1">No matching plugins found</h3>
             <p className="text-sm text-slate-400 max-w-sm mx-auto mb-4">
-              Try adjusting your query or create a new plugin to add it to the marketplace.
+              Try adjusting your query or resetting your active filters.
             </p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
@@ -274,37 +267,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ onCopy, onOpenCreatePl
           </div>
         )}
 
-        {/* Submit Plugin Banner */}
-        <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-lg font-bold text-white">
-                Want to publish your own plugin?
-              </h3>
-            </div>
-            <p className="text-sm text-slate-400 max-w-xl">
-              Anyone can publish! Scaffold a new plugin in seconds with <code className="text-emerald-400 font-mono text-xs">avm create &lt;name&gt;</code>, publish a GitHub Release with compiled binaries, and open a PR adding your entry to <code className="text-emerald-400 font-mono text-xs">registry.json</code>.
-            </p>
-          </div>
-          <button
-            onClick={onOpenCreatePlugin}
-            className="shrink-0 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs font-mono tracking-wide transition-all shadow-md shadow-emerald-500/20"
-          >
-            Read Plugin Guide &rarr;
-          </button>
-        </div>
-
       </div>
-
-      {/* Details Modal */}
-      {selectedPlugin && (
-        <PluginModal
-          plugin={selectedPlugin}
-          onClose={() => setSelectedPlugin(null)}
-          onCopy={onCopy}
-        />
-      )}
     </section>
   );
 };
