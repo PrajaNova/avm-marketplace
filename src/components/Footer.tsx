@@ -10,11 +10,10 @@ export const Footer: React.FC = () => {
           {/* Brand Col */}
           <div className="space-y-3">
             <Link to="/" className="flex items-center gap-2 text-white font-bold text-base">
-              <span className="text-emerald-400 font-mono text-xl">⚡</span>
               <span>avm</span>
             </Link>
             <p className="text-slate-400 text-xs leading-relaxed">
-              Any Version Manager &mdash; the Rust-native monorepo tooling layer for command aliases, runtime selection, and plugin discovery.
+              Any Version Manager &mdash; a Rust-native tool for project aliases, per-directory runtime versions, and env vars, with plugins fetched on demand from the marketplace.
             </p>
             <div className="text-[11px] text-slate-500 font-mono">
               Designed by PrajaNova &bull; MIT Licensed
