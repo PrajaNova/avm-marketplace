@@ -21,8 +21,8 @@ const TERMINAL_TABS: TerminalTab[] = [
       { type: 'comment', text: '# Define project-scoped command aliases' },
       { type: 'input', text: 'avm add dev "pnpm run dev --filter web"' },
       { type: 'success', text: '✓ Added alias "dev" -> "pnpm run dev --filter web"' },
-      { type: 'comment', text: '# Execute without shell drift or path confusion' },
-      { type: 'input', text: 'avm run dev' },
+      { type: 'comment', text: '# Execute directly without shell drift or path confusion' },
+      { type: 'input', text: 'avm dev' },
       { type: 'output', text: '> web@1.0.0 dev\n> vite dev --port 3000\n  ➜  Local:   http://localhost:3000/' }
     ]
   },

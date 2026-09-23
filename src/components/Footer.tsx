@@ -42,13 +42,8 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/commands" className="hover:text-emerald-400 transition-colors">
-                  Command Cheat Sheet
-                </Link>
-              </li>
-              <li>
-                <Link to="/create-plugin" className="hover:text-emerald-400 transition-colors">
-                  Create a Plugin
+                <Link to="/docs/manage/commands" className="hover:text-emerald-400 transition-colors">
+                  CLI Command Reference
                 </Link>
               </li>
             </ul>

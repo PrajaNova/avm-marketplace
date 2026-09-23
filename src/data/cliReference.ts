@@ -50,11 +50,11 @@ Version: 22.14.0 (pinned locally in .avm.json)
 Binary: ~/.avm/tools/node/22.14.0/bin/node`
   },
   {
-    command: 'avm run',
-    args: '<alias> [args...]',
+    command: 'avm <alias>',
+    args: '[args...]',
     category: 'Aliases',
-    description: 'Executes a configured alias with local environment and tool versions injected.',
-    example: 'avm run dev --port 3000'
+    description: 'Executes a configured project alias or package.json script directly with injected environment and tools.',
+    example: 'avm dev --port 3000'
   },
   {
     command: 'avm resolve',
@@ -113,14 +113,6 @@ Downloading release for darwin_arm64...
     category: 'Plugins',
     description: 'Checks for newer releases of the plugin and updates the binary.',
     example: 'avm plugin update node'
-  },
-  {
-    command: 'avm create',
-    args: '<plugin-name>',
-    category: 'Plugins',
-    description: 'Scaffolds a new Rust plugin crate with ToolProvider skeleton and GitHub Actions workflows.',
-    example: 'avm create python',
-    outputExample: '✓ Created plugin scaffold at ./avm-plugin-python'
   },
 
   // Version Management

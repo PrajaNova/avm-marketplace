@@ -8,8 +8,6 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { HomePage } from './pages/HomePage';
 import { MarketplacePage } from './pages/MarketplacePage';
 import { DocsPage } from './pages/DocsPage';
-import { CommandsPage } from './pages/CommandsPage';
-import { CreatePluginPage } from './pages/CreatePluginPage';
 
 export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -36,8 +34,10 @@ export function App() {
             <Route path="/" element={<HomePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
             <Route path="/marketplace" element={<MarketplacePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
             <Route path="/docs" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/commands" element={<CommandsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/create-plugin" element={<CreatePluginPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/docs/:section" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/docs/plugins/:pluginName" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/docs/*" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/commands" element={<Navigate to="/docs/manage/commands" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
