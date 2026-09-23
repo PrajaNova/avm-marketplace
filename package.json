@@ -6,19 +6,14 @@
   "homepage": "https://prajanova.github.io/avm-marketplace",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp dist/index.html dist/404.html && cp registry.json dist/",
+    "build": "tsc && vite build && cp registry.json dist/",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.23",
-    "@radix-ui/react-tabs": "^1.1.21",
-    "@radix-ui/react-tooltip": "^1.2.16",
-    "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.18.4",
-    "tailwind-merge": "^3.0.1"
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@types/react": "^19.0.8",

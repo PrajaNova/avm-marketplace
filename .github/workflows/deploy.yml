@@ -42,9 +42,6 @@ jobs:
       - name: Build React application
         run: pnpm run build
 
-      - name: Ensure registry.json is in dist
-        run: cp registry.json dist/registry.json
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

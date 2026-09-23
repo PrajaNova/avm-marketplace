@@ -4,19 +4,18 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Toast } from './components/Toast';
 import { ScrollToTop } from './components/ScrollToTop';
+import { Marketplace } from './components/Marketplace';
 
 import { HomePage } from './pages/HomePage';
-import { MarketplacePage } from './pages/MarketplacePage';
 import { DocsPage } from './pages/DocsPage';
 
 export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2500);
+  const copy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setToastMessage(`Copied: ${text}`);
+    setTimeout(() => setToastMessage(null), 2500);
   };
 
   return (
@@ -31,12 +30,9 @@ export function App() {
         {/* Routed pages */}
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<HomePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/marketplace" element={<MarketplacePage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/docs" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/docs/:section" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/docs/plugins/:pluginName" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
-            <Route path="/docs/*" element={<DocsPage onCopy={(t) => showToast(`Copied: ${t}`)} />} />
+            <Route path="/" element={<HomePage onCopy={copy} />} />
+            <Route path="/marketplace" element={<div className="py-6"><Marketplace onCopy={copy} /></div>} />
+            <Route path="/docs/*" element={<DocsPage onCopy={copy} />} />
             <Route path="/commands" element={<Navigate to="/docs/manage/commands" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

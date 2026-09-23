@@ -4,7 +4,6 @@ import {
   Pause,
   RotateCcw,
   Terminal,
-  Check,
   Copy,
 } from 'lucide-react';
 
@@ -76,9 +75,7 @@ const DEMO_STEPS: WalkthroughStep[] = [
 ];
 
 export interface WalkthroughVideoProps {
-  onCopy?: (text: string) => void;
-  videoSrc?: string;
-  posterSrc?: string;
+  onCopy: (text: string) => void;
   steps?: WalkthroughStep[];
   title?: string;
   badge?: string;
@@ -98,7 +95,6 @@ export const WalkthroughVideo: React.FC<WalkthroughVideoProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [typedCommand, setTypedCommand] = useState('');
   const [showOutput, setShowOutput] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   // Reset when steps change
   useEffect(() => {
@@ -167,16 +163,6 @@ export const WalkthroughVideo: React.FC<WalkthroughVideoProps> = ({
   const handleRestart = () => {
     setCurrentStepIndex(0);
     setIsPlaying(true);
-  };
-
-  const handleCopyCommand = () => {
-    if (onCopy) {
-      onCopy(currentStep.command);
-    } else {
-      navigator.clipboard.writeText(currentStep.command);
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const cycleSpeed = () => {
@@ -285,7 +271,7 @@ export const WalkthroughVideo: React.FC<WalkthroughVideoProps> = ({
 
             {/* Output block */}
             {showOutput && (
-              <div className="animate-fadeIn">
+              <div>
                 <pre className="text-slate-300 whitespace-pre-wrap pl-4 border-l-2 border-slate-700/80 text-xs sm:text-sm font-mono leading-relaxed bg-slate-900/30 p-3 rounded-r-lg">
                   {currentStep.output}
                 </pre>
@@ -332,11 +318,11 @@ export const WalkthroughVideo: React.FC<WalkthroughVideoProps> = ({
 
             <div className="flex items-center gap-3">
               <button
-                onClick={handleCopyCommand}
+                onClick={() => onCopy(currentStep.command)}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-colors text-xs"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copied' : `Copy $ ${currentStep.command}`}</span>
+                <Copy className="w-3.5 h-3.5" />
+                <span>{`Copy $ ${currentStep.command}`}</span>
               </button>
 
               <div className="text-[11px] text-slate-500 hidden sm:inline">
