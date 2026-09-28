@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ExternalLink,
   Copy,
-  Check,
   Package,
   Layers,
   Sparkles,
   FileJson,
   Cpu
 } from 'lucide-react';
+import registry from '../../../registry.json';
 import { EXTENDED_PLUGIN_METADATA } from '../../data/registryData';
 import { PLUGIN_WALKTHROUGHS } from '../../data/pluginWalkthroughData';
-import { WalkthroughVideo, WalkthroughStep } from '../WalkthroughVideo';
+import { WalkthroughVideo } from '../WalkthroughVideo';
 
 interface PluginDocViewProps {
   pluginName: string;
@@ -22,89 +22,11 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
   pluginName,
   onCopy,
 }) => {
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const cleanName = pluginName.toLowerCase().replace(/^avm-plugin-/, '');
+  const plugin = registry.plugins.find((p) => p.name === pluginName);
+  if (!plugin) return <p className="text-slate-400">Unknown plugin: {pluginName}</p>;
+  const cleanName = plugin.name;
   const meta = EXTENDED_PLUGIN_METADATA[cleanName];
-
-  // Title formatting
-  const pluginTitles: Record<string, string> = {
-    node: 'Node.js Runtime Provider',
-    java: 'OpenJDK Temurin Provider',
-    android: 'Android SDK & Emulator Provider',
-  };
-
-  const title = pluginTitles[cleanName] || `${cleanName.toUpperCase()} Provider`;
-  const repoName = `PrajaNova/avm-plugin-${cleanName}`;
-
-  // Walkthrough data with fallback
-  const walkthrough = PLUGIN_WALKTHROUGHS[cleanName] || {
-    title: `${title} Walkthrough`,
-    badge: `avm-plugin-${cleanName}`,
-    steps: [
-      {
-        id: `${cleanName}-add`,
-        stepNumber: '01',
-        label: 'Add Plugin',
-        command: `avm plugin add ${cleanName}`,
-        comment: `# Fetch precompiled ${cleanName} plugin from registry`,
-        output: `Resolving '${cleanName}' from PrajaNova/avm-marketplace...\nDownloading release binary for your OS...\n✓ Registered ToolProvider ~/.avm/plugins/avm-plugin-${cleanName}/bin/avm-plugin`,
-        timing: '0.8s',
-      },
-      {
-        id: `${cleanName}-versions`,
-        stepNumber: '02',
-        label: 'Browse Versions',
-        command: `avm ${cleanName} versions`,
-        comment: `# List upstream releases available for installation`,
-        output: `Available ${cleanName} versions:\n  latest (stable)\n  lts\n  v2.0.0\n  v1.9.4`,
-        timing: '250ms',
-      },
-      {
-        id: `${cleanName}-install`,
-        stepNumber: '03',
-        label: 'Download Binary',
-        command: `avm ${cleanName} install latest`,
-        comment: `# Fast binary fetch of official release`,
-        output: `Downloading upstream release...\nExtracting to ~/.avm/tools/${cleanName}/latest...\n✓ Successfully installed ${cleanName}`,
-        timing: '1.9s',
-      },
-      {
-        id: `${cleanName}-use`,
-        stepNumber: '04',
-        label: 'Pin Local Version',
-        command: `avm ${cleanName} use latest`,
-        comment: `# Pin version in local .avm.json`,
-        output: `✓ Updated ./.avm.json:\n  "tools": {\n    "${cleanName}": "latest"\n  }\nDirectory activated: ${cleanName}`,
-        timing: '<1ms',
-      },
-      {
-        id: `${cleanName}-env`,
-        stepNumber: '05',
-        label: 'Export Env',
-        command: `avm env`,
-        comment: `# Injects environment variables and PATH shims`,
-        output: `export PATH="/Users/dev/.avm/shims:$PATH"`,
-        timing: '<0.3ms',
-      },
-      {
-        id: `${cleanName}-verify`,
-        stepNumber: '06',
-        label: 'Verify Shim',
-        command: `which ${cleanName}`,
-        comment: `# Transparent shim resolution without subshell latency`,
-        output: `/Users/dev/.avm/shims/${cleanName}`,
-        timing: '<0.2ms',
-      },
-    ] as WalkthroughStep[],
-  };
-
-  const handleCopy = (id: string, text: string) => {
-    onCopy(text);
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+  const walkthrough = PLUGIN_WALKTHROUGHS[cleanName];
 
   return (
     <div className="space-y-12">
@@ -123,7 +45,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                {title}
+                {plugin.section_label} Plugin
               </h1>
               <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 Official
@@ -136,7 +58,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
 
           <div className="flex items-center gap-3 shrink-0">
             <a
-              href={`https://github.com/${repoName}`}
+              href={`https://github.com/${plugin.repo}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-mono"
@@ -149,6 +71,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
       </div>
 
       {/* Embedded Video Tutorial & Interactive Walkthrough */}
+      {walkthrough && (
       <div>
         <div className="flex items-center justify-between gap-4 mb-4">
           <div>
@@ -161,7 +84,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
             </h2>
           </div>
           <span className="hidden sm:inline-block text-xs font-mono text-slate-500">
-            6 interactive steps
+            {walkthrough.steps.length} interactive steps
           </span>
         </div>
 
@@ -174,6 +97,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
           onCopy={onCopy}
         />
       </div>
+      )}
 
       {/* Quick Install Bar */}
       <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-6 sm:p-7">
@@ -188,21 +112,17 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
         <div className="relative rounded-xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs sm:text-sm text-emerald-300 flex items-center justify-between">
           <span>avm plugin add {cleanName}</span>
           <button
-            onClick={() => handleCopy('install-cmd', `avm plugin add ${cleanName}`)}
+            onClick={() => onCopy(`avm plugin add ${cleanName}`)}
             className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
             title="Copy command"
           >
-            {copiedId === 'install-cmd' ? (
-              <Check className="w-4 h-4 text-emerald-400" />
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
+                          <Copy className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Key Commands Table */}
-      {meta?.keyCommands && meta.keyCommands.length > 0 && (
+      {meta && (
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-white font-bold text-lg">
             <Layers className="w-5 h-5 text-emerald-400" />
@@ -229,15 +149,11 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
                     </td>
                     <td className="p-3.5 text-right">
                       <button
-                        onClick={() => handleCopy(`cmd-${idx}`, cmd.command)}
+                        onClick={() => onCopy(cmd.command)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                         title="Copy command"
                       >
-                        {copiedId === `cmd-${idx}` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
+                                                  <Copy className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
@@ -249,7 +165,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
       )}
 
       {/* Environment Injections */}
-      {meta?.envVars && meta.envVars.length > 0 && (
+      {meta && (
         <div className="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 sm:p-7">
           <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
             <Cpu className="w-4 h-4 text-emerald-400" />
@@ -274,7 +190,7 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
       )}
 
       {/* Sample .avm.json Snippet */}
-      {meta?.sampleConfig && (
+      {meta && (
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-white font-bold text-lg">
             <FileJson className="w-5 h-5 text-emerald-400" />
@@ -284,22 +200,18 @@ export const PluginDocView: React.FC<PluginDocViewProps> = ({
           <div className="relative rounded-2xl bg-slate-950 border border-slate-800 p-5 font-mono text-xs text-slate-300 overflow-x-auto shadow-lg">
             <pre>{meta.sampleConfig}</pre>
             <button
-              onClick={() => handleCopy('sample-cfg', meta.sampleConfig || '')}
+              onClick={() => onCopy(meta.sampleConfig)}
               className="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
               title="Copy config"
             >
-              {copiedId === 'sample-cfg' ? (
-                <Check className="w-4 h-4 text-emerald-400" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
+                              <Copy className="w-4 h-4" />
             </button>
           </div>
         </div>
       )}
 
       {/* Feature Highlights */}
-      {meta?.highlights && meta.highlights.length > 0 && (
+      {meta && (
         <div className="rounded-2xl bg-slate-900/30 border border-slate-800 p-6 sm:p-7 space-y-3">
           <h3 className="text-base font-bold text-white">Features & Highlights</h3>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">

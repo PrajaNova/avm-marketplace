@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   Copy,
-  Check,
   Terminal,
   FileJson,
   Package,
@@ -11,107 +10,30 @@ import {
   ArrowRight,
   ArrowLeft
 } from 'lucide-react';
-import { DocsSidebar } from '../components/docs/DocsSidebar';
+import { DocsSidebar, ASDF_SIDEBAR_CONFIG } from '../components/docs/DocsSidebar';
 import { PluginDocView } from '../components/docs/PluginDocView';
 import { TerminalInstallBox } from '../components/TerminalInstallBox';
 import { CliReference } from '../components/CliReference';
-import { SHELL_SETUP_GUIDE, COMPARISONS } from '../data/guideData';
+import { ComparisonTable } from '../components/ComparisonTable';
+import { SHELL_SETUP_GUIDE } from '../data/guideData';
 
 interface DocsPageProps {
   onCopy: (text: string) => void;
 }
 
 // Flat list of navigable pages for Next/Previous links
-interface PageNavInfo {
-  id: string;
-  text: string;
-  group: string;
-}
-
-const ALL_PAGES: PageNavInfo[] = [
-  { id: 'introduction', text: 'What is avm?', group: 'Guide' },
-  { id: 'getting-started', text: 'Getting Started', group: 'Guide' },
-  { id: 'shell-setup', text: 'Shell Setup & Shims', group: 'Guide' },
-  { id: 'usage-core', text: 'Core (CLI & Precedence)', group: 'Usage' },
-  { id: 'usage-plugins', text: 'Plugins (Add, List, Update)', group: 'Usage' },
-  { id: 'usage-versions', text: 'Versions (Browse, Install, Pin)', group: 'Usage' },
-  { id: 'usage-aliases', text: 'Aliases & Scripts Discovery', group: 'Usage' },
-  { id: 'configuration', text: 'Configuration (.avm.json)', group: 'Reference' },
-  { id: 'commands', text: 'All Commands', group: 'Reference' },
-  { id: 'dependencies', text: 'Dependencies & Host Env', group: 'Reference' },
-  { id: 'architecture', text: 'Architecture & Wire Protocol', group: 'Reference' },
-  { id: 'comparison', text: 'Comparison Matrix', group: 'Reference' },
-  { id: 'plugin-node', text: 'Node.js Plugin & Tutorial', group: 'Plugins' },
-  { id: 'plugin-java', text: 'Java Temurin Plugin & Tutorial', group: 'Plugins' },
-  { id: 'plugin-android', text: 'Android SDK Plugin & Tutorial', group: 'Plugins' },
-  { id: 'faq', text: 'Frequently Asked Questions', group: 'Questions' },
-  { id: 'troubleshooting', text: 'Troubleshooting & Diagnostics', group: 'Questions' },
-  { id: 'contribute-core', text: 'Core avm Contribution', group: 'Contribute' },
-  { id: 'contribute-docs', text: 'Contributing Documentation', group: 'Contribute' },
-];
+const ALL_PAGES = ASDF_SIDEBAR_CONFIG.flatMap((g) =>
+  g.items.filter((i) => !i.external).map((i) => ({ ...i, group: g.text }))
+);
 
 export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Parse section from current URL path
-  // Supports: /docs, /docs/guide/introduction, /docs/plugins/node, /docs/getting-started, etc.
-  const path = location.pathname.replace(/^\/docs\/?/, '');
-  let activeSection = 'introduction';
-
-  if (!path || path === '') {
-    activeSection = 'introduction';
-  } else if (path.includes('plugins/')) {
-    const pluginName = path.split('plugins/')[1].replace(/\/.*$/, '').toLowerCase();
-    activeSection = `plugin-${pluginName}`;
-  } else {
-    // Check if path matches any page id directly or through trailing segment
-    const segments = path.split('/');
-    const lastSeg = segments[segments.length - 1].toLowerCase();
-    const matched = ALL_PAGES.find((p) => p.id === lastSeg || path.endsWith(p.id));
-    if (matched) {
-      activeSection = matched.id;
-    } else if (lastSeg === 'core') {
-      activeSection = path.includes('contribute') ? 'contribute-core' : 'usage-core';
-    } else if (lastSeg === 'plugins') {
-      activeSection = 'usage-plugins';
-    } else if (lastSeg === 'versions') {
-      activeSection = 'usage-versions';
-    } else if (lastSeg === 'commands') {
-      activeSection = 'commands';
-    } else {
-      activeSection = lastSeg || 'introduction';
-    }
-  }
-
-  // Scroll to top on section switch
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeSection]);
-
-  const handleSelectSection = (id: string, link?: string) => {
-    if (link) {
-      navigate(link);
-    } else if (id.startsWith('plugin-')) {
-      const pName = id.replace('plugin-', '');
-      navigate(`/docs/plugins/${pName}`);
-    } else {
-      navigate(`/docs/${id}`);
-    }
-  };
-
-  const handleCopy = (id: string, text: string) => {
-    onCopy(text);
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  // Find page metadata and Next/Previous navigation
-  const pageIndex = ALL_PAGES.findIndex((p) => p.id === activeSection);
-  const currentPage = ALL_PAGES[pageIndex] || ALL_PAGES[0];
+  const currentPage = ALL_PAGES.find((p) => p.link === location.pathname) || ALL_PAGES[0];
+  const activeSection = currentPage.id;
+  const pageIndex = ALL_PAGES.indexOf(currentPage);
   const prevPage = pageIndex > 0 ? ALL_PAGES[pageIndex - 1] : null;
   const nextPage = pageIndex < ALL_PAGES.length - 1 ? ALL_PAGES[pageIndex + 1] : null;
 
@@ -139,7 +61,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
         {/* asdf-vm style Sidebar */}
         <DocsSidebar
           activeSection={activeSection}
-          onSelectSection={handleSelectSection}
+          onSelectSection={navigate}
           isOpenMobile={isMobileMenuOpen}
           onCloseMobile={() => setIsMobileMenuOpen(false)}
         />
@@ -293,11 +215,11 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                   </div>
 
                   <button
-                    onClick={() => handleCopy('qs-cmds', 'avm init\navm plugin add node\navm node install 22.14.0\navm node use 22.14.0\navm alias add dev "pnpm run dev"')}
+                    onClick={() => onCopy('avm init\navm plugin add node\navm node install 22.14.0\navm node use 22.14.0\navm alias add dev "pnpm run dev"')}
                     className="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
                     title="Copy all"
                   >
-                    {copiedId === 'qs-cmds' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    <Copy className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -330,20 +252,11 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                       </pre>
                     </div>
                     <button
-                      onClick={() => handleCopy(`shell-${item.shell}`, item.snippet)}
+                      onClick={() => onCopy(item.snippet)}
                       className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono flex items-center justify-center gap-1.5 transition-colors"
                     >
-                      {copiedId === `shell-${item.shell}` ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Copied</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>Copy Hook Script</span>
-                        </>
-                      )}
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy Hook Script</span>
                     </button>
                   </div>
                 ))}
@@ -527,10 +440,10 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
   }
 }`}</pre>
                 <button
-                  onClick={() => handleCopy('cfg-ref', `{\n  "aliases": {\n    "dev": "pnpm run dev"\n  },\n  "tools": {\n    "node": "22.14.0"\n  }\n}`)}
+                  onClick={() => onCopy(`{\n  "aliases": {\n    "dev": "pnpm run dev"\n  },\n  "tools": {\n    "node": "22.14.0"\n  }\n}`)}
                   className="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
                 >
-                  {copiedId === 'cfg-ref' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  <Copy className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -624,30 +537,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 overflow-hidden bg-slate-900/60 shadow-xl overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-800 bg-slate-950/80 font-mono text-slate-300">
-                      <th className="p-4 font-semibold">Capability</th>
-                      <th className="p-4 font-bold text-emerald-400 bg-emerald-500/10">avm</th>
-                      <th className="p-4 font-semibold text-slate-400">asdf</th>
-                      <th className="p-4 font-semibold text-slate-400">vfox</th>
-                      <th className="p-4 font-semibold text-slate-400">nvm</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/60 font-sans">
-                    {COMPARISONS.map((comp, idx) => (
-                      <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="p-4 font-mono font-medium text-slate-200 whitespace-nowrap">{comp.feature}</td>
-                        <td className="p-4 font-medium text-emerald-300 bg-emerald-500/5">{comp.avm}</td>
-                        <td className="p-4 text-slate-400">{comp.asdf}</td>
-                        <td className="p-4 text-slate-400">{comp.vfox}</td>
-                        <td className="p-4 text-slate-400">{comp.nvm}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <ComparisonTable />
             </div>
 
           ) : activeSection === 'faq' ? (
@@ -751,7 +641,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
           <div className="mt-16 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             {prevPage ? (
               <button
-                onClick={() => handleSelectSection(prevPage.id)}
+                onClick={() => navigate(prevPage.link)}
                 className="flex-1 flex flex-col items-start p-4 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all group text-left"
               >
                 <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 group-hover:text-emerald-400 mb-1">
@@ -768,7 +658,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
 
             {nextPage && (
               <button
-                onClick={() => handleSelectSection(nextPage.id)}
+                onClick={() => navigate(nextPage.link)}
                 className="flex-1 flex flex-col items-end p-4 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all group text-right"
               >
                 <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-400 group-hover:text-emerald-400 mb-1">

@@ -11,28 +11,20 @@ import {
 export interface SidebarItem {
   id: string;
   text: string;
-  link?: string;
+  link: string;
   external?: boolean;
   hasVideo?: boolean;
   badge?: string;
 }
 
-export interface SidebarSubGroup {
-  subTitle: string;
-  items: SidebarItem[];
-}
-
 export interface SidebarGroup {
   text: string;
-  defaultOpen?: boolean;
-  items?: SidebarItem[];
-  subGroups?: SidebarSubGroup[];
+  items: SidebarItem[];
 }
 
 export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   {
     text: 'Guide',
-    defaultOpen: true,
     items: [
       { id: 'introduction', text: 'What is avm?', link: '/docs/guide/introduction' },
       { id: 'getting-started', text: 'Getting Started', link: '/docs/guide/getting-started' },
@@ -41,7 +33,6 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   },
   {
     text: 'Usage',
-    defaultOpen: true,
     items: [
       { id: 'usage-core', text: 'Core (CLI & Precedence)', link: '/docs/manage/core' },
       { id: 'usage-plugins', text: 'Plugins (Add, List, Update)', link: '/docs/manage/plugins' },
@@ -51,7 +42,6 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   },
   {
     text: 'Reference',
-    defaultOpen: true,
     items: [
       { id: 'configuration', text: 'Configuration (.avm.json)', link: '/docs/manage/configuration' },
       { id: 'commands', text: 'All Commands', link: '/docs/manage/commands' },
@@ -62,7 +52,6 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   },
   {
     text: 'Plugins',
-    defaultOpen: true,
     items: [
       { id: 'plugin-node', text: 'Node.js', link: '/docs/plugins/node', hasVideo: true, badge: 'Walkthrough' },
       { id: 'plugin-java', text: 'Java (Temurin OpenJDK)', link: '/docs/plugins/java', hasVideo: true, badge: 'Walkthrough' },
@@ -71,7 +60,6 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   },
   {
     text: 'Questions',
-    defaultOpen: true,
     items: [
       { id: 'faq', text: 'FAQ', link: '/docs/more/faq' },
       { id: 'troubleshooting', text: 'Troubleshooting & Diagnostics', link: '/docs/more/troubleshooting' },
@@ -85,7 +73,6 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
   },
   {
     text: 'Contribute',
-    defaultOpen: false,
     items: [
       { id: 'contribute-core', text: 'Core avm', link: '/docs/contribute/core' },
       { id: 'contribute-docs', text: 'Documentation', link: '/docs/contribute/documentation' },
@@ -95,7 +82,7 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
 
 interface DocsSidebarProps {
   activeSection: string;
-  onSelectSection: (id: string, link?: string) => void;
+  onSelectSection: (link: string) => void;
   isOpenMobile?: boolean;
   onCloseMobile?: () => void;
 }
@@ -141,7 +128,7 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
       <li key={item.id}>
         <button
           onClick={() => {
-            onSelectSection(item.id, item.link);
+            onSelectSection(item.link);
             if (onCloseMobile) onCloseMobile();
           }}
           className={`w-full flex items-center justify-between text-left px-3 py-1.5 rounded-lg text-xs font-sans transition-all group ${
@@ -178,7 +165,7 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
           isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-thumb-slate-800">
+        <div className="flex-1 overflow-y-auto px-4 py-6">
           
           {/* Mobile Header with close button */}
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800 lg:hidden">
@@ -221,26 +208,9 @@ export const DocsSidebar: React.FC<DocsSidebarProps> = ({
 
                   {/* Group Items */}
                   {!isCollapsed && (
-                    <div className="mt-1 space-y-3">
-                      {group.items && (
-                        <ul className="space-y-0.5 pl-1">
-                          {group.items.map(renderItem)}
-                        </ul>
-                      )}
-
-                      {/* Sub-groups (e.g. First Party Plugins vs Authors under Plugins) */}
-                      {group.subGroups &&
-                        group.subGroups.map((sub) => (
-                          <div key={sub.subTitle} className="pt-2 pl-2">
-                            <span className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block px-2 mb-1">
-                              {sub.subTitle}
-                            </span>
-                            <ul className="space-y-0.5">
-                              {sub.items.map(renderItem)}
-                            </ul>
-                          </div>
-                        ))}
-                    </div>
+                    <ul className="mt-1 space-y-0.5 pl-1">
+                      {group.items.map(renderItem)}
+                    </ul>
                   )}
 
                 </div>
