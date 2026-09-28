@@ -26,10 +26,16 @@ Requirements for `repo`:
 - Its GitHub Releases must include an asset named
   `avm-plugin-<name>_<os>_<arch>.tar.gz` for each platform you support —
   `<os>` is `linux` or `darwin`, `<arch>` is `amd64` or `arm64` (matching
-  avm's own release convention; avm itself only ships `darwin_arm64` for
-  macOS — Apple Silicon only).
+  avm's own release convention, including Intel Macs as `darwin_amd64`;
+  the reusable release workflow builds all four).
 - Each archive contains exactly one file: the plugin executable, named
   `avm-plugin-<name>`.
+- The release also includes `checksums.txt` — `sha256sum` output over the
+  archives. avm verifies the archive against it before extracting and
+  refuses releases without it (unless the user sets
+  `AVM_ALLOW_UNVERIFIED=1`). The reusable
+  `PrajaNova/avm/.github/workflows/plugin-release.yml` generates it (plus a
+  build provenance attestation) for you.
 - The executable speaks avm's plugin protocol (JSON-over-stdio commands:
   `manifest`, `versions`, `is-installed`, `installed-versions`,
   `executable-path`, `env-vars`, `install`, `uninstall`) — see
