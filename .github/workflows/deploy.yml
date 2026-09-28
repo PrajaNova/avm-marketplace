@@ -1,9 +1,8 @@
 name: Deploy Documentation & Marketplace to GitHub Pages
 
+# Manual only: Actions → Deploy Documentation & Marketplace → Run workflow
+# (or `gh workflow run deploy.yml`). Merging to main doesn't deploy.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
