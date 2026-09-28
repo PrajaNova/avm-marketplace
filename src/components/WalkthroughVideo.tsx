@@ -42,7 +42,7 @@ const DEMO_STEPS: WalkthroughStep[] = [
     label: 'Add Plugin',
     command: 'avm plugin add node',
     comment: '# Fetch precompiled native plugin from marketplace registry',
-    output: "Resolving 'node' from PrajaNova/avm-marketplace...\nFound PrajaNova/avm-plugin-node (v0.1.2)\nDownloading precompiled release for darwin-aarch64...\n✓ Installed ~/.avm/plugins/avm-plugin-node/bin/avm-plugin\n✓ Registered ToolProvider with isolated stdio wire protocol",
+    output: "Fetching 'node' from PrajaNova/avm-plugin-node...\n✓ Installed node v0.2.0",
     timing: '1.1s',
   },
   {
@@ -326,7 +326,7 @@ export const WalkthroughVideo: React.FC<WalkthroughVideoProps> = ({
               </button>
 
               <div className="text-[11px] text-slate-500 hidden sm:inline">
-                Pure Rust &bull; &lt;1ms latency
+                Pure Rust &bull; verified plugins
               </div>
             </div>
           </div>

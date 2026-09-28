@@ -22,5 +22,6 @@ export interface ComparisonItem {
   avm: string;
   asdf: string;
   vfox: string;
-  nvm: string;
+  mise: string;
+  proto: string;
 }

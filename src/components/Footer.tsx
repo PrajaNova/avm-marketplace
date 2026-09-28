@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
               <span>avm</span>
             </Link>
             <p className="text-slate-400 text-xs leading-relaxed">
-              Any Version Manager &mdash; a Rust-native tool for project aliases, per-directory runtime versions, and env vars, with plugins fetched on demand from the marketplace.
+              Any Version Manager &mdash; a Rust-native tool for per-directory runtime versions, project aliases, and env vars, with verified plugins fetched on demand from the marketplace. macOS, Linux, and Windows.
             </p>
             <div className="text-[11px] text-slate-500 font-mono">
               Designed by PrajaNova &bull; MIT Licensed
@@ -44,6 +44,11 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/docs/manage/commands" className="hover:text-emerald-400 transition-colors">
                   CLI Command Reference
+                </Link>
+              </li>
+              <li>
+                <Link to="/changelog" className="hover:text-emerald-400 transition-colors">
+                  Changelog
                 </Link>
               </li>
             </ul>

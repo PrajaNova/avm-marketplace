@@ -8,6 +8,7 @@ export const Navbar: React.FC = () => {
   const navItems = [
     { to: '/marketplace', label: 'Marketplace' },
     { to: '/docs', label: 'Docs' },
+    { to: '/changelog', label: 'Changelog' },
   ];
 
   return (

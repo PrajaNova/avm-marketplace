@@ -7,7 +7,7 @@ export const CLI_COMMANDS: CliCommand[] = [
     category: 'Core',
     description: 'Initializes an .avm.json configuration file in the current working directory.',
     example: 'avm init',
-    outputExample: '✓ Initialized .avm.json'
+    outputExample: '✓ Created .avm.json in current directory'
   },
   {
     command: 'avm add',
@@ -15,7 +15,7 @@ export const CLI_COMMANDS: CliCommand[] = [
     category: 'Aliases',
     description: 'Adds an executable alias to local or global .avm.json configuration.',
     example: 'avm add dev "pnpm run dev --filter web"',
-    outputExample: '✓ Added alias "dev" -> "pnpm run dev --filter web"'
+    outputExample: "✓ Added local alias 'dev'"
   },
   {
     command: 'avm remove',
@@ -23,7 +23,7 @@ export const CLI_COMMANDS: CliCommand[] = [
     category: 'Aliases',
     description: 'Removes an alias from the configuration file.',
     example: 'avm remove dev',
-    outputExample: '✓ Removed alias "dev"'
+    outputExample: "✓ Removed local alias 'dev'"
   },
   {
     command: 'avm list',
@@ -43,11 +43,19 @@ Env:
     command: 'avm which',
     args: '<alias-or-tool>',
     category: 'Core',
-    description: 'Inspects origin, precedence, and resolved location/command for a tool or alias.',
+    description: 'Shows where an alias or tool version comes from: local or global .avm.json, or the version file that pinned it (.nvmrc, .tool-versions, …).',
     example: 'avm which node',
-    outputExample: `Tool: node
-Version: 22.14.0 (pinned locally in .avm.json)
-Binary: ~/.avm/tools/node/22.14.0/bin/node`
+    outputExample: `tool 'node': 22.14.0 (from ./.nvmrc)`
+  },
+  {
+    command: 'avm trust',
+    args: '[path] [--revoke | --list]',
+    category: 'Core',
+    description: "Trusts this project's .avm.json and .env so their aliases and env apply. It shows what it enables; editing the file outside avm blocks it again until re-trusted.",
+    example: 'avm trust',
+    outputExample: `  alias dev → pnpm run dev
+  env   NODE_ENV=development
+✓ Trusted ~/code/my-app/.avm.json`
   },
   {
     command: 'avm <alias>',
@@ -65,11 +73,20 @@ Binary: ~/.avm/tools/node/22.14.0/bin/node`
   },
   {
     command: 'avm env',
+    args: '[--shell sh|pwsh|cmd]',
     category: 'Env',
-    description: 'Prints shell-safe export statements for merged environment variables.',
-    example: 'avm env',
-    outputExample: `export NODE_ENV="development"
-export JAVA_HOME="/Users/.../.avm/tools/java/openjdk-17.0.13+11"`
+    description: 'Prints export statements for merged env and provider vars (JAVA_HOME, ANDROID_HOME, …) in sh, PowerShell, or cmd syntax.',
+    example: 'avm env --shell pwsh',
+    outputExample: `$env:NODE_ENV = 'development'
+$env:JAVA_HOME = 'C:\\Users\\dev\\.avm\\tools\\java\\openjdk-17.0.13+11'`
+  },
+  {
+    command: 'avm env add',
+    args: '[-g] <KEY> <value>',
+    category: 'Env',
+    description: 'Adds an env var to local (or global with -g) .avm.json. Also: avm env remove, avm env list.',
+    example: 'avm env add NODE_ENV development',
+    outputExample: "✓ Added local env var 'NODE_ENV=development'"
   },
 
   // Plugins
@@ -77,12 +94,10 @@ export JAVA_HOME="/Users/.../.avm/tools/java/openjdk-17.0.13+11"`
     command: 'avm plugin add',
     args: '<name | org/repo | git-url>',
     category: 'Plugins',
-    description: 'Fetches and installs a plugin binary from the marketplace registry or git repository.',
+    description: "Installs a plugin's compiled release for your platform from the marketplace, after verifying its sha256 against the release's checksums.txt. A mismatch aborts with nothing installed.",
     example: 'avm plugin add node',
-    outputExample: `Resolving "node" from marketplace registry...
-Found PrajaNova/avm-plugin-node
-Downloading release for darwin_arm64...
-✓ Installed ~/.avm/plugins/avm-plugin-node/bin/avm-plugin`
+    outputExample: `Fetching 'node' from PrajaNova/avm-plugin-node...
+✓ Installed node v0.2.0`
   },
   {
     command: 'avm plugin list',
@@ -160,7 +175,8 @@ Downloading release for darwin_arm64...
   {
     command: 'avm shell-init',
     category: 'Shims',
-    description: 'Prints shell initialization script to hook PATH and shims into your shell session.',
+    args: '[pwsh]',
+    description: 'Prints the shell hook that puts shims on PATH and applies env after each avm call (bash/zsh by default, or PowerShell).',
     example: 'eval "$(avm shell-init)"'
   },
   {
@@ -175,11 +191,5 @@ Downloading release for darwin_arm64...
     description: 'Prints the absolute path to the avm shims directory.',
     example: 'avm shims path',
     outputExample: '~/.avm/shims'
-  },
-  {
-    command: 'avm all',
-    category: 'Core',
-    description: 'Prints comprehensive grouped documentation of all aliases, plugins, commands, and shims.',
-    example: 'avm all'
   }
 ];

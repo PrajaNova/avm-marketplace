@@ -11,7 +11,7 @@ export const PLUGIN_WALKTHROUGHS: Record<string, { title: string; badge: string;
         label: 'Add Plugin',
         command: 'avm plugin add node',
         comment: '# Fetch the precompiled native Node.js provider from the marketplace',
-        output: 'Resolving \'node\' from PrajaNova/avm-marketplace registry...\nFound PrajaNova/avm-plugin-node (v0.1.2)\nDownloading release binary for darwin-aarch64...\n✓ Installed ~/.avm/plugins/avm-plugin-node/bin/avm-plugin\n✓ Registered ToolProvider with typed JSON stdio protocol',
+        output: 'Fetching \'node\' from PrajaNova/avm-plugin-node...\n✓ Installed node v0.2.0',
         timing: '0.9s'
       },
       {
@@ -72,7 +72,7 @@ export const PLUGIN_WALKTHROUGHS: Record<string, { title: string; badge: string;
         label: 'Add Plugin',
         command: 'avm plugin add java',
         comment: '# Install native OpenJDK provider powered by Eclipse Temurin & Foojay Disco API',
-        output: 'Resolving \'java\' from PrajaNova/avm-marketplace registry...\nFound PrajaNova/avm-plugin-java (v0.1.2)\nDownloading release binary for darwin-aarch64...\n✓ Installed ~/.avm/plugins/avm-plugin-java/bin/avm-plugin\n✓ Registered OpenJDK ToolProvider',
+        output: 'Fetching \'java\' from PrajaNova/avm-plugin-java...\n✓ Installed java v0.2.0',
         timing: '0.8s'
       },
       {
@@ -133,7 +133,7 @@ export const PLUGIN_WALKTHROUGHS: Record<string, { title: string; badge: string;
         label: 'Add Plugin',
         command: 'avm plugin add android',
         comment: '# Install native Android SDK provider (cmdline-tools, platform-tools, avd manager)',
-        output: 'Resolving \'android\' from PrajaNova/avm-marketplace registry...\nFound PrajaNova/avm-plugin-android (v0.1.6)\nDownloading release binary for darwin-aarch64...\n✓ Installed ~/.avm/plugins/avm-plugin-android/bin/avm-plugin\n✓ Registered Android ToolProvider',
+        output: 'Fetching \'android\' from PrajaNova/avm-plugin-android...\n✓ Installed android v0.2.0',
         timing: '1.0s'
       },
       {

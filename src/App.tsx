@@ -8,6 +8,7 @@ import { Marketplace } from './components/Marketplace';
 
 import { HomePage } from './pages/HomePage';
 import { DocsPage } from './pages/DocsPage';
+import { ChangelogPage } from './pages/ChangelogPage';
 
 export function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -33,6 +34,7 @@ export function App() {
             <Route path="/" element={<HomePage onCopy={copy} />} />
             <Route path="/marketplace" element={<div className="py-6"><Marketplace onCopy={copy} /></div>} />
             <Route path="/docs/*" element={<DocsPage onCopy={copy} />} />
+            <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="/commands" element={<Navigate to="/docs/manage/commands" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

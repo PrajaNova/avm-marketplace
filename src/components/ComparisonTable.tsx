@@ -11,7 +11,8 @@ export const ComparisonTable = () => (
           </th>
           <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">asdf</th>
           <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">vfox</th>
-          <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">nvm</th>
+          <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">mise</th>
+          <th className="p-4 font-mono font-medium text-slate-400 border-l border-slate-700/80">proto</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +26,8 @@ export const ComparisonTable = () => (
             </td>
             <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.asdf}</td>
             <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.vfox}</td>
-            <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.nvm}</td>
+            <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.mise}</td>
+            <td className="p-4 text-slate-400 border-l border-slate-700/80 align-top">{comp.proto}</td>
           </tr>
         ))}
       </tbody>

@@ -104,7 +104,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
               <div className="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 sm:p-8 space-y-4">
                 <h3 className="text-xl font-bold text-white">Why avm?</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Traditional version managers like <em>asdf</em>, <em>nvm</em>, and <em>rbenv</em> rely on heavy bash harness scripts, nested subshells, and fragmented configuration files (<code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.tool-versions</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.nvmrc</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.ruby-version</code>).
+                  Version managers like <em>nvm</em> and <em>rbenv</em> rely on shell scripts, and most tools split their state across fragmented configuration files (<code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.tool-versions</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.nvmrc</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.ruby-version</code>).
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs">
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
@@ -118,7 +118,8 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                   <div className="p-4 rounded-xl bg-slate-950 border border-emerald-500/20 bg-emerald-950/10">
                     <span className="text-emerald-400 font-bold block mb-1">The avm Approach</span>
                     <ul className="space-y-1.5 text-slate-300">
-                      <li>&bull; Pure compiled Rust with &lt;1ms execution latency</li>
+                      <li>&bull; A single compiled Rust binary, with plugins as separate verified executables</li>
+                      <li>&bull; Reads your existing <code className="font-mono text-emerald-300">.nvmrc</code> / <code className="font-mono text-emerald-300">.tool-versions</code> as-is</li>
                       <li>&bull; Precompiled standalone binaries with zero compilation</li>
                       <li>&bull; Unified <code className="font-mono text-emerald-300">.avm.json</code> for aliases, tools, and env vars</li>
                     </ul>
@@ -164,7 +165,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                   Getting Started
                 </h1>
                 <p className="text-slate-300 text-base leading-relaxed max-w-3xl">
-                  Install avm on macOS or Linux in seconds. Choose your preferred package manager or run the automated shell installer.
+                  Install avm on macOS, Linux, or Windows in seconds. Every installer verifies the binary's sha256 before installing it.
                 </p>
               </div>
 
@@ -173,7 +174,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                 <div>
                   <h3 className="text-xl font-bold text-white mb-1">1. Install avm CLI</h3>
                   <p className="text-xs sm:text-sm text-slate-400">
-                    Select your installation target (macOS Apple Silicon, Intel, Linux x86_64, arm64):
+                    Select your installation target (macOS Apple Silicon or Intel, Linux x86_64 or arm64, Windows x64):
                   </p>
                 </div>
                 <TerminalInstallBox onCopy={onCopy} />
@@ -406,6 +407,82 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
               </div>
             </div>
 
+          ) : activeSection === 'version-files' ? (
+
+            /* Usage: Version Files */
+            <div className="space-y-10">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                  Version Files
+                </h1>
+                <p className="text-slate-300 text-base leading-relaxed max-w-3xl">
+                  avm reads the version files your projects already have, so you can try it without rewriting any config.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 sm:p-8 space-y-4 text-sm text-slate-300">
+                <h3 className="text-xl font-bold text-white">Precedence (nearest directory wins)</h3>
+                <ol className="list-decimal pl-5 space-y-1.5">
+                  <li><code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.avm.json</code> <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">tools</code> in the current directory</li>
+                  <li><code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.tool-versions</code> (asdf format; <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">nodejs</code> maps to <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">node</code>)</li>
+                  <li><code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.nvmrc</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.node-version</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">package.json</code> (<code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">volta.node</code>, else the <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">engines.node</code> range), <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.java-version</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.sdkmanrc</code></li>
+                  <li>Global <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">~/.avm.json</code></li>
+                </ol>
+                <p>Version files are searched upward from the current directory. Partial specs resolve to the newest <em>installed</em> match:</p>
+                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-1">
+                  <div><span className="text-slate-500"># .nvmrc: 20</span> <span className="text-slate-400">→ 20.11.1</span></div>
+                  <div><span className="text-slate-500"># .nvmrc: lts/iron, lts/*</span> <span className="text-slate-400">→ newest installed 20.x / newest LTS</span></div>
+                  <div><span className="text-slate-500"># package.json engines: &gt;=18 &lt;21, ^20.1, 18 || 20</span> <span className="text-slate-400">→ newest installed match</span></div>
+                  <div><span className="text-slate-500"># .java-version: 17</span> <span className="text-slate-400">→ openjdk-17.0.9+9</span></div>
+                </div>
+                <p>See which file won with <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm which</code>:</p>
+                <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300">{`$ avm which node
+tool 'node': 20.11.1 (from ./.nvmrc)`}</pre>
+                <p>To ignore the tool-specific files (item 3), set <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">"idiomatic_version_files": false</code> in <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">~/.avm.json</code>.</p>
+              </div>
+            </div>
+
+          ) : activeSection === 'security' ? (
+
+            /* Usage: Security & Trust */
+            <div className="space-y-10">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                  Security &amp; Trust
+                </h1>
+                <p className="text-slate-300 text-base leading-relaxed max-w-3xl">
+                  Cloning a repository never runs its config, and every binary avm downloads is verified before it's unpacked.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 sm:p-8 space-y-4 text-sm text-slate-300">
+                <h3 className="text-xl font-bold text-white">Trusting a project</h3>
+                <p>
+                  A project's <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.avm.json</code> aliases and <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">env</code>, and its <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">.env</code> files, run with your privileges and reach every shimmed <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">node</code>/<code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">java</code>. So avm ignores them until you trust that exact file content. Tool pins only pick a version and always apply.
+                </p>
+                <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300">{`$ cd cloned-repo
+$ avm trust            # shows the aliases/env it enables, then trusts them
+$ avm trust --list     # everything you've trusted
+$ avm trust --revoke   # stop trusting this directory`}</pre>
+                <ul className="space-y-1.5 list-disc pl-5">
+                  <li>Trust is stored as path &rarr; sha256 in <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">~/.avm/trusted.json</code>. Any edit made outside avm blocks the file again; <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm init</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm add</code> and <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm env add</code> keep a trusted file trusted.</li>
+                  <li>Your global <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">~/.avm.json</code> is always trusted and can list <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">"trusted_paths": ["~/work/**"]</code>.</li>
+                  <li><code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">AVM_TRUST_ALL=1</code> trusts everything, for CI. It's never implied by <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">CI=true</code>.</li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 sm:p-8 space-y-4 text-sm text-slate-300">
+                <h3 className="text-xl font-bold text-white">Verified downloads</h3>
+                <ul className="space-y-1.5 list-disc pl-5">
+                  <li><strong className="text-white">Plugins:</strong> <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm plugin add</code> checks the archive against the release's <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">checksums.txt</code> before extracting. A mismatch aborts with nothing installed.</li>
+                  <li><strong className="text-white">Runtimes:</strong> Node.js is checked against <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">SHASUMS256.txt</code>, Temurin JDKs against foojay's sha256, and the Android cmdline-tools zip against a pinned sha256 (<code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">sdkmanager</code> verifies the rest).</li>
+                  <li><strong className="text-white">avm itself:</strong> <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">install.sh</code>, <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">install.ps1</code> and the npm installer verify <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">avm-bin</code> the same way.</li>
+                  <li><strong className="text-white">Provenance:</strong> every release carries a GitHub build attestation. Check it with <code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">gh attestation verify &lt;archive&gt; --owner PrajaNova</code>.</li>
+                  <li><code className="text-emerald-300 font-mono text-xs bg-slate-950 px-1 py-0.5 rounded">AVM_ALLOW_UNVERIFIED=1</code> is the only way to skip verification.</li>
+                </ul>
+              </div>
+            </div>
+
           ) : activeSection === 'configuration' ? (
 
             /* 9. Reference: Configuration */
@@ -471,7 +548,8 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                   <h4 className="font-bold text-white text-sm">Supported Operating Systems</h4>
                   <ul className="space-y-1 text-slate-300 font-mono text-xs">
                     <li>&bull; macOS (Apple Silicon arm64, Intel x86_64)</li>
-                    <li>&bull; Linux (x86_64, aarch64, glibc & musl)</li>
+                    <li>&bull; Linux (x86_64, aarch64; glibc)</li>
+                    <li>&bull; Windows x64 via PowerShell (phase 1; Windows plugins coming)</li>
                   </ul>
                 </div>
                 <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
@@ -533,7 +611,7 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
                   Comparison Matrix
                 </h1>
                 <p className="text-slate-300 text-base leading-relaxed max-w-3xl">
-                  Side-by-side comparison of avm against asdf, vfox, and nvm.
+                  Side-by-side comparison of avm against asdf, vfox, mise, and proto, checked against each project's docs in September 2026. "Not documented" means we couldn't find it, not that it's confirmed absent.
                 </p>
               </div>
 
@@ -555,7 +633,8 @@ export const DocsPage: React.FC<DocsPageProps> = ({ onCopy }) => {
 
               <div className="space-y-4 text-xs sm:text-sm">
                 {[
-                  { q: 'How does avm achieve sub-millisecond execution overhead?', a: 'avm is built in pure Rust and uses static directory-aware PATH shims in ~/.avm/shims. It avoids sourcing large bash files, spawning subshells, or hooking cd.' },
+                  { q: 'Do I need to rewrite my .nvmrc or .tool-versions?', a: 'No. avm reads .tool-versions, .nvmrc, .node-version, package.json engines/volta, .java-version and .sdkmanrc directly. avm which <tool> shows which file a version came from.' },
+                  { q: "Why doesn't my project's alias run after I clone it?", a: "A project's aliases, env and .env files are ignored until you run avm trust in that directory. It shows what you're enabling first. Editing the file outside avm blocks it again." },
                   { q: 'Can I use globally installed packages across different local version pins?', a: 'Yes! avm supports global package sharing, meaning globally installed tools (like npm -g packages) remain reachable even when a directory pins a different version.' },
                   { q: 'Where are plugins downloaded and installed?', a: 'Plugins are stored in ~/.avm/plugins/avm-plugin-<name>, while downloaded runtimes reside in ~/.avm/tools/<name>/<version>.' },
                   { q: 'What happens if a requested tool version is not installed?', a: 'avm gracefully prints a clear diagnostic notice and executes your host system binary fallback if available, rather than abruptly aborting.' },
