@@ -4,7 +4,9 @@ import {
   ArrowRight,
   FileJson,
   FolderGit2,
-  Zap,
+  FileSearch,
+  Lock,
+  Monitor,
   Package,
   Sparkles,
   Share2,
@@ -63,21 +65,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
   const corePillars = [
     { icon: FileJson, title: 'Project & global alias resolution', desc: 'Aliases in .avm.json execute with injected environment variables and tool versions.' },
     { icon: FolderGit2, title: 'Directory-aware local precedence', desc: 'Local project configuration takes immediate precedence over global ~/.avm.json settings.' },
-    { icon: Zap, title: 'Sub-millisecond native execution', desc: 'Built in Rust (<1ms overhead) — no Ruby, Python, or bash subshells slowing down your terminal.' },
+    { icon: FileSearch, title: 'Works with your existing version files', desc: '.nvmrc, .node-version, .tool-versions, package.json engines, .java-version and .sdkmanrc are read as-is — no config rewrite to try avm.' },
+    { icon: Lock, title: 'Nothing runs until you trust it', desc: "A cloned repo's .avm.json aliases/env and .env files stay inert until you run avm trust; editing them re-blocks." },
+    { icon: ShieldCheck, title: 'Verified downloads', desc: 'Plugins, avm itself, and Node/Java/Android downloads are sha256-checked before extraction; releases carry build provenance attestations.' },
+    { icon: Monitor, title: 'macOS, Linux, and Windows', desc: 'Apple Silicon and Intel Macs, Linux x64/arm64, and Windows via PowerShell (phase 1).' },
     { icon: Package, title: 'Runtime plugin marketplace', desc: 'avm plugin add fetches a precompiled native binary on demand from GitHub Releases — never built from source.' },
     { icon: Sparkles, title: 'Automatic package.json discovery', desc: 'Scripts in package.json become instant avm <script> commands, using your detected package manager.' },
     { icon: Share2, title: 'Global package sharing across versions', desc: 'A globally pinned tool (like npm -g packages) stays reachable even when a different local version is active.' },
-    { icon: ShieldCheck, title: 'Isolated subprocess wire protocol', desc: 'Plugins run as standalone OS processes speaking a typed JSON-over-stdio contract — failures stay isolated.' },
+    { icon: Layers, title: 'Isolated subprocess wire protocol', desc: 'Plugins run as standalone OS processes speaking a typed JSON-over-stdio contract — failures stay isolated.' },
     { icon: Workflow, title: 'Workflow orchestration', desc: 'Unifies multi-runtime dependencies, env vars, and team scripts into one reproducible development experience.' },
     { icon: AlertTriangle, title: 'Safe host fallback', desc: "If a managed version isn't installed, avm falls back to the host/system tool with a clear warning." },
   ];
 
   const workspaceCrates = [
-    { name: 'crates/avm-cli', desc: 'Clap-based binary entrypoint (avm-bin), command routing, shell protocol dispatch.' },
-    { name: 'crates/avm-core', desc: 'Config parsing (.avm.json), local/global merge rules, alias/env/tool resolution.' },
-    { name: 'crates/avm-shims', desc: 'Shim directory management (~/.avm/shims) and executable shim generation.' },
-    { name: 'crates/avm-plugin-api', desc: 'The ToolProvider trait, the plugin wire-protocol types, and the runner module plugins call.' },
-    { name: 'crates/avm-runtime', desc: 'Plugin discovery, the protocol host runner (PluginProcess), the marketplace installer, and the legacy asdf adapter.' },
+    { name: 'crates/avm-cli · cli/', desc: 'The avm-bin binary: Clap command routing, shell-init (sh and PowerShell), trust.' },
+    { name: 'crates/avm-cli · config, resolver, version_files', desc: '.avm.json parsing, local/global merge, version files (.nvmrc, .tool-versions, …), alias/env/tool resolution.' },
+    { name: 'crates/avm-cli · shims, runtime', desc: 'Shims in ~/.avm/shims, plugin discovery, the protocol host, the verified marketplace installer, and the asdf adapter.' },
+    { name: 'crates/avm-plugin-api', desc: 'The ToolProvider trait, the wire protocol, the runner every plugin uses, and shared sha256 verification helpers.' },
   ];
 
   return (
@@ -90,6 +94,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>RUST-NATIVE &middot; RUNTIME PLUGIN MARKETPLACE</span>
           </div>
+          <Link
+            to="/changelog"
+            className="-mt-4 mb-7 text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+          >
+            New in v0.4.0-beta-1: config trust, version files, verified downloads, Intel &amp; Windows &rarr;
+          </Link>
 
           <h1 className="font-sans font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.12] tracking-tight text-slate-100 mb-6 max-w-3xl">
             The version manager for your whole project.
@@ -172,7 +182,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
           <div className="text-center mb-10">
             <p className="text-[11px] font-mono tracking-widest text-emerald-400 uppercase mb-2">HOW IT COMPARES</p>
             <h2 className="font-sans font-bold text-2xl sm:text-3xl text-slate-100">
-              avm, next to asdf, vfox, and nvm
+              avm, next to asdf, vfox, mise, and proto
             </h2>
           </div>
 

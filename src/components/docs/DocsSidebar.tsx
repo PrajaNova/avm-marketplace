@@ -38,6 +38,8 @@ export const ASDF_SIDEBAR_CONFIG: SidebarGroup[] = [
       { id: 'usage-plugins', text: 'Plugins (Add, List, Update)', link: '/docs/manage/plugins' },
       { id: 'usage-versions', text: 'Versions (Browse, Install, Pin)', link: '/docs/manage/versions' },
       { id: 'usage-aliases', text: 'Aliases & Scripts Discovery', link: '/docs/manage/aliases' },
+      { id: 'version-files', text: 'Version Files (.nvmrc, .tool-versions)', link: '/docs/manage/version-files', badge: 'New' },
+      { id: 'security', text: 'Security & Trust', link: '/docs/manage/security', badge: 'New' },
     ],
   },
   {

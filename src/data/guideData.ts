@@ -1,54 +1,95 @@
 import { ComparisonItem } from '../types';
 
+// Checked against each project's docs, September 2026 (sources in the avm
+// README). "Not documented" = we couldn't find it, not confirmed absent.
 export const COMPARISONS: ComparisonItem[] = [
   {
-    feature: 'Runtime Model',
-    avm: 'Native compiled Rust binary (<1ms overhead)',
-    asdf: 'Ruby/Bash script harness with shell subshells',
-    vfox: 'Rust shell-hook engine with Lua sandbox',
-    nvm: 'Heavy Bash script sourced into shell'
+    feature: 'Implementation',
+    avm: 'Rust',
+    asdf: 'Go (rewritten from Bash in v0.16)',
+    vfox: 'Go',
+    mise: 'Rust',
+    proto: 'Rust'
   },
   {
-    feature: 'Plugin Architecture',
-    avm: 'Prebuilt native binaries fetched on-demand, JSON wire protocol',
-    asdf: 'Bash scripts executed directly on host system',
-    vfox: 'Lua scripts running inside embedded Lua runtime',
-    nvm: 'Single-purpose (Node.js only, no plugin ecosystem)'
+    feature: 'Plugin model',
+    avm: 'Compiled executable per tool, separate process, typed JSON-over-stdio; asdf plugins via an adapter',
+    asdf: 'Bash scripts',
+    vfox: 'Lua',
+    mise: 'asdf and vfox plugins plus backends (aqua, npm, cargo, …)',
+    proto: 'WASM plugins, or TOML/JSON/YAML definitions'
   },
   {
-    feature: 'Tool Interception',
-    avm: 'Static PATH shims in ~/.avm/shims + directory-aware dispatch',
-    asdf: 'Shim scripts triggering bash environment re-eval',
-    vfox: 'Shell hooks rewriting PATH on every directory cd',
-    nvm: 'Shell function intercepting node/npm'
+    feature: 'Download verification',
+    avm: 'sha256 on by default for plugins, avm itself and first-party runtimes (fails closed); build provenance attestations',
+    asdf: 'Left to each plugin',
+    vfox: 'Plugin-supplied checksum',
+    mise: 'aqua backend: checksums, cosign/minisign/SLSA/attestations',
+    proto: 'Checksums, minisign, GPG'
   },
   {
-    feature: 'Unified Config',
-    avm: '.avm.json handles aliases, env vars, and tool versions together',
-    asdf: '.tool-versions (versions only)',
-    vfox: '.tool-versions (versions only)',
-    nvm: '.nvmrc (Node version only)'
+    feature: 'Existing version files',
+    avm: '.tool-versions, .nvmrc, .node-version, package.json, .java-version, .sdkmanrc, on by default',
+    asdf: '.tool-versions; others opt-in',
+    vfox: '.tool-versions, .nvmrc, .node-version, .sdkmanrc',
+    mise: 'Opt-in per tool',
+    proto: '.nvmrc etc. on by default'
   },
   {
-    feature: 'Global Package Fallback',
-    avm: 'Global packages (e.g. npm -g) accessible even with different local version',
-    asdf: 'Isolated per-version; requires manual reshimming',
-    vfox: 'Isolated per-version',
-    nvm: 'Requires reinstalling global packages per Node version'
+    feature: 'Config trust',
+    avm: 'avm trust (hash-pinned; editing re-blocks)',
+    asdf: 'Not documented',
+    vfox: 'Not documented',
+    mise: 'mise trust',
+    proto: 'Not documented'
   },
   {
-    feature: 'Project Scripts Integration',
-    avm: 'Discovers package.json scripts automatically (e.g. `avm dev`)',
-    asdf: 'None',
-    vfox: 'None',
-    nvm: 'None'
+    feature: 'Windows',
+    avm: 'PowerShell (phase 1); Windows plugins coming',
+    asdf: 'WSL only',
+    vfox: 'Native',
+    mise: 'Native',
+    proto: 'Native'
   },
   {
-    feature: 'Missing Version Behavior',
-    avm: 'Gracefully falls back to system binary with clear warning',
-    asdf: 'Errors and blocks execution',
-    vfox: 'Errors and blocks execution',
-    nvm: 'Errors and blocks execution'
+    feature: 'Lockfile',
+    avm: 'Not yet (roadmap #25)',
+    asdf: 'No',
+    vfox: 'Not documented',
+    mise: 'mise.lock (opt-in)',
+    proto: '.protolock (unstable)'
+  },
+  {
+    feature: 'Tasks',
+    avm: 'Aliases + package.json scripts (no dependency graph yet, #33)',
+    asdf: 'No',
+    vfox: 'No',
+    mise: 'Yes',
+    proto: 'No (moon is separate)'
+  },
+  {
+    feature: 'Pinned version missing',
+    avm: 'Falls back to the system binary with a warning',
+    asdf: 'Error',
+    vfox: 'Not documented',
+    mise: 'Auto-install',
+    proto: 'Error (auto-install opt-in)'
+  },
+  {
+    feature: 'Plugin subcommands',
+    avm: 'Yes (e.g. avm android avd)',
+    asdf: 'Yes',
+    vfox: 'No',
+    mise: 'Not documented',
+    proto: 'Not documented'
+  },
+  {
+    feature: 'Global npm packages across switches',
+    avm: 'Built in',
+    asdf: 'Per plugin (default-packages file)',
+    vfox: 'Not documented',
+    mise: 'Default-packages file (deprecated)',
+    proto: 'Shared globals dir'
   }
 ];
 
@@ -58,27 +99,34 @@ export const INSTALL_METHODS = [
     name: 'Shell Script',
     tag: 'Recommended',
     command: 'curl -fsSL https://raw.githubusercontent.com/prajanova/avm/main/install.sh | bash',
-    description: 'Auto-detects OS and CPU architecture (Apple Silicon / Intel Mac / Linux amd64 & arm64) and installs avm-bin.'
+    description: 'Detects OS and CPU (Apple Silicon / Intel Mac / Linux amd64 & arm64), verifies the sha256 against the release, and installs avm-bin.'
   },
   {
     id: 'brew',
     name: 'Homebrew',
     tag: 'macOS / Linux',
     command: 'brew install prajanova/tap/avm',
-    description: 'Installs via Homebrew tap with automatic PATH and completions.'
+    description: 'Installs from the PrajaNova Homebrew tap (Apple Silicon, Intel, and Linux).'
   },
   {
     id: 'npm',
     name: 'npm / npx',
     tag: 'Node ecosystem',
-    command: 'npm install -g @prajanova/avm',
-    description: 'Installs global prebuilt binary wrapper through npm registry.'
+    command: 'npm install -g @prajanova/avm@beta',
+    description: 'Downloads the prebuilt, checksum-verified binary for your platform (macOS, Linux, Windows).'
+  },
+  {
+    id: 'powershell',
+    name: 'PowerShell',
+    tag: 'Windows',
+    command: 'irm https://raw.githubusercontent.com/PrajaNova/avm/main/install.ps1 | iex',
+    description: 'Installs avm-bin to %LOCALAPPDATA%\\avm\\bin after verifying its sha256, and adds the shell hook to your PowerShell profile.'
   },
   {
     id: 'cargo',
     name: 'Cargo',
     tag: 'Rust developers',
-    command: 'cargo install --git https://github.com/PrajaNova/avm.git crates/avm-cli',
+    command: 'cargo install --git https://github.com/PrajaNova/avm.git avm-cli',
     description: 'Builds and installs directly from source using the latest Rust compiler.'
   }
 ];
@@ -95,8 +143,8 @@ export const SHELL_SETUP_GUIDE = [
     snippet: `echo 'eval "$(avm shell-init)"' >> ~/.bashrc\nsource ~/.bashrc`
   },
   {
-    shell: 'fish',
-    file: '~/.config/fish/config.fish',
-    snippet: `echo 'avm shell-init | source' >> ~/.config/fish/config.fish`
+    shell: 'pwsh',
+    file: '$PROFILE',
+    snippet: `Add-Content $PROFILE 'Invoke-Expression ((& avm-bin shell-init pwsh) -join "\`n")'`
   }
 ];

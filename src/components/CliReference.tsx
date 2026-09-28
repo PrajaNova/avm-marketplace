@@ -129,7 +129,7 @@ export const CliReference: React.FC<CliReferenceProps> = ({ onCopy }) => {
 
         {/* Group summary reminder */}
         <div className="mt-8 p-4 rounded-xl bg-slate-900/40 border border-slate-800 text-center text-xs text-slate-400 font-mono">
-          Tip: You can also run <code className="text-emerald-400">avm all</code> in your terminal to see grouped help in real-time.
+          Tip: run <code className="text-emerald-400">avm --help</code> (or <code className="text-emerald-400">avm Tip: You can also run <code className="text-emerald-400">avm all</code> in your terminal to see grouped help in real-time.lt;commandTip: You can also run <code className="text-emerald-400">avm all</code> in your terminal to see grouped help in real-time.gt; --help</code>) in your terminal for the same reference.
         </div>
 
       </div>
