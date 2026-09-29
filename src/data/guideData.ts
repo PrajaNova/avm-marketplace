@@ -45,7 +45,7 @@ export const COMPARISONS: ComparisonItem[] = [
   },
   {
     feature: 'Windows',
-    avm: 'PowerShell (phase 1); Windows plugins coming',
+    avm: 'Native: PowerShell, .exe shims for IDEs, Windows plugins',
     asdf: 'WSL only',
     vfox: 'Native',
     mise: 'Native',
@@ -112,7 +112,7 @@ export const INSTALL_METHODS = [
     id: 'npm',
     name: 'npm / npx',
     tag: 'Node ecosystem',
-    command: 'npm install -g @prajanova/avm@beta',
+    command: 'npm install -g @prajanova/avm',
     description: 'Downloads the prebuilt, checksum-verified binary for your platform (macOS, Linux, Windows).'
   },
   {
@@ -121,6 +121,13 @@ export const INSTALL_METHODS = [
     tag: 'Windows',
     command: 'irm https://raw.githubusercontent.com/PrajaNova/avm/main/install.ps1 | iex',
     description: 'Installs avm-bin to %LOCALAPPDATA%\\avm\\bin after verifying its sha256, and adds the shell hook to your PowerShell profile.'
+  },
+  {
+    id: 'scoop',
+    name: 'Scoop',
+    tag: 'Windows',
+    command: 'scoop install https://github.com/PrajaNova/avm/releases/latest/download/avm.json',
+    description: 'Installs the verified Windows build from the manifest published with every release.'
   },
   {
     id: 'cargo',

@@ -549,7 +549,7 @@ $ avm trust --revoke   # stop trusting this directory`}</pre>
                   <ul className="space-y-1 text-slate-300 font-mono text-xs">
                     <li>&bull; macOS (Apple Silicon arm64, Intel x86_64)</li>
                     <li>&bull; Linux (x86_64, aarch64; glibc)</li>
-                    <li>&bull; Windows x64 via PowerShell (phase 1; Windows plugins coming)</li>
+                    <li>&bull; Windows x64 (PowerShell, .exe shims for IDEs, Windows plugins)</li>
                   </ul>
                 </div>
                 <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">

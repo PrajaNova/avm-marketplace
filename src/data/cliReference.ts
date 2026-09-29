@@ -89,6 +89,38 @@ $env:JAVA_HOME = 'C:\\Users\\dev\\.avm\\tools\\java\\openjdk-17.0.13+11'`
     outputExample: "✓ Added local env var 'NODE_ENV=development'"
   },
 
+  {
+    command: 'avm outdated',
+    args: '[--json]',
+    category: 'Versions',
+    description: 'Lists pinned tools with the newest version in each pin\'s range and the newest overall.',
+    example: 'avm outdated',
+    outputExample: `TOOL  REQUESTED  CURRENT  LATEST IN RANGE  LATEST   PINNED BY
+node  20         20.9.0   20.20.2          26.10.0  ./.nvmrc`
+  },
+  {
+    command: 'avm upgrade',
+    args: '[tool...] [--bump] [--dry-run] [-y]',
+    category: 'Versions',
+    description: 'Installs the newest in-range version and moves .avm.json pins. --bump crosses majors; version files like .nvmrc are never rewritten.',
+    example: 'avm upgrade --dry-run'
+  },
+  {
+    command: 'avm prune',
+    args: '[--older-than 90d] [--include-unrecorded] [--dry-run] [-y]',
+    category: 'Versions',
+    description: 'Removes installed versions that no global pin or known project uses. Shows sizes and warns about versions holding global npm packages.',
+    example: 'avm prune --dry-run'
+  },
+  {
+    command: 'avm self-update',
+    args: '[--version X]',
+    category: 'Core',
+    description: 'Updates avm from the latest release, sha256-verified. Homebrew, npm, cargo and Scoop installs print their own upgrade command.',
+    example: 'avm self-update',
+    outputExample: '✓ Updated avm 0.4.0 → 0.4.1'
+  },
+
   // Plugins
   {
     command: 'avm plugin add',
@@ -121,6 +153,13 @@ $env:JAVA_HOME = 'C:\\Users\\dev\\.avm\\tools\\java\\openjdk-17.0.13+11'`
     category: 'Plugins',
     description: 'Uninstalls an installed plugin binary from ~/.avm/plugins.',
     example: 'avm plugin remove java'
+  },
+  {
+    command: 'avm plugin outdated',
+    args: '[--json]',
+    category: 'Plugins',
+    description: 'Compares installed plugins with their latest marketplace releases.',
+    example: 'avm plugin outdated'
   },
   {
     command: 'avm plugin update',
