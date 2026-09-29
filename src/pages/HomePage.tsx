@@ -98,7 +98,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCopy }) => {
             to="/changelog"
             className="-mt-4 mb-7 text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
           >
-            New in v0.4.0-beta-1: config trust, version files, verified downloads, Intel &amp; Windows &rarr;
+            New in v0.4.0: verified downloads, config trust, version files, Windows, self-update &rarr;
           </Link>
 
           <h1 className="font-sans font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.12] tracking-tight text-slate-100 mb-6 max-w-3xl">
